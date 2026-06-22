@@ -43,10 +43,10 @@ export default function ContactPage() {
   ];
 
   const inputClass =
-    "w-full rounded-lg border border-blue-200 dark:border-blue-800 bg-white dark:bg-blue-950 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition text-blue-950 dark:text-blue-50 placeholder:text-blue-400/60 dark:placeholder:text-blue-400/40";
+    "w-full rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 transition text-stone-900 dark:text-stone-100 placeholder:text-stone-400 dark:placeholder:text-stone-600";
 
   const labelClass =
-    "block text-sm font-medium text-blue-800 dark:text-blue-200 mb-1.5";
+    "block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1.5";
 
   return (
     <div className="max-w-3xl mx-auto px-5 sm:px-8 py-20">
@@ -59,19 +59,19 @@ export default function ContactPage() {
       >
         <motion.span
           variants={fadeInUp}
-          className="inline-block text-xs font-semibold uppercase tracking-widest text-blue-600 mb-3"
+          className="inline-block text-xs font-semibold uppercase tracking-widest text-amber-500 mb-3"
         >
           Get in Touch
         </motion.span>
         <motion.h1
           variants={fadeInUp}
-          className="font-lora text-4xl sm:text-5xl font-bold text-blue-950 dark:text-blue-50 mb-4"
+          className="font-lora text-4xl sm:text-5xl font-bold text-stone-900 dark:text-stone-100 mb-4"
         >
           Contact Us
         </motion.h1>
         <motion.p
           variants={fadeInUp}
-          className="text-blue-700/60 dark:text-blue-300/60 text-base sm:text-lg max-w-xl mx-auto leading-relaxed"
+          className="text-stone-500 dark:text-stone-400 text-base sm:text-lg max-w-xl mx-auto leading-relaxed"
         >
           Have a question, a story idea, or just want to say hello? We&apos;d love
           to hear from you. Reach out to the {APP_NAME} editorial team anytime.
@@ -91,16 +91,16 @@ export default function ContactPage() {
             <motion.div
               key={card.title}
               variants={scaleIn}
-              className="rounded-xl border border-blue-100 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/40 p-5 flex items-start gap-4"
+              className="rounded-xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 p-5 flex items-start gap-4"
             >
-              <span className="rounded-lg bg-blue-100 dark:bg-blue-900/60 p-2 flex-shrink-0">
-                <card.icon size={18} className="text-blue-600 dark:text-blue-400" />
+              <span className="rounded-lg bg-amber-100 dark:bg-amber-900/30 p-2 flex-shrink-0">
+                <card.icon size={18} className="text-amber-600 dark:text-amber-400" />
               </span>
               <div>
-                <p className="font-semibold text-blue-950 dark:text-blue-50 text-sm">
+                <p className="font-semibold text-stone-900 dark:text-stone-100 text-sm">
                   {card.title}
                 </p>
-                <p className="text-sm text-blue-700/70 dark:text-blue-300/70 mt-0.5">
+                <p className="text-sm text-stone-500 dark:text-stone-400 mt-0.5">
                   {card.subtitle}
                 </p>
               </div>
@@ -115,53 +115,56 @@ export default function ContactPage() {
               variants={scaleIn}
               initial="hidden"
               animate="visible"
-              className="rounded-xl border border-blue-100 dark:border-blue-900 bg-white dark:bg-blue-950 p-8 flex flex-col items-center justify-center text-center h-full min-h-[320px]"
+              className="rounded-xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 p-8 flex flex-col items-center justify-center text-center h-full min-h-[320px] gap-4"
             >
-              <span className="w-14 h-14 rounded-full bg-blue-100 dark:bg-blue-900/60 flex items-center justify-center mb-5">
-                <Send size={24} className="text-blue-600 dark:text-blue-400" />
+              <span className="w-14 h-14 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mb-2">
+                <Send size={24} className="text-amber-600 dark:text-amber-400" />
               </span>
-              <h2 className="font-lora text-2xl font-bold text-blue-950 dark:text-blue-50 mb-2">
+              <h2 className="font-lora text-2xl font-bold text-stone-900 dark:text-stone-100">
                 Message Sent!
               </h2>
-              <p className="text-blue-700/60 dark:text-blue-300/60 text-sm leading-relaxed">
-                Thanks for reaching out. We&apos;ll get back to you within 2 business days.
+              <p className="text-stone-500 dark:text-stone-400 text-sm leading-relaxed max-w-xs">
+                Thanks for reaching out. The {APP_NAME} team will get back to you
+                within 2 business days.
               </p>
             </motion.div>
           ) : (
             <form
               onSubmit={handleSubmit}
-              className="rounded-xl border border-blue-100 dark:border-blue-900 bg-white dark:bg-blue-950 p-6 flex flex-col gap-4"
+              className="rounded-xl border border-stone-200 dark:border-stone-800 bg-white dark:bg-stone-900 p-6 flex flex-col gap-5"
             >
               <div>
                 <label htmlFor="name" className={labelClass}>
-                  Your Name
+                  Name
                 </label>
                 <input
                   id="name"
                   name="name"
                   type="text"
                   required
-                  placeholder="Jane Smith"
+                  placeholder="Your name"
                   value={form.name}
                   onChange={handleChange}
                   className={inputClass}
                 />
               </div>
+
               <div>
                 <label htmlFor="email" className={labelClass}>
-                  Email Address
+                  Email
                 </label>
                 <input
                   id="email"
                   name="email"
                   type="email"
                   required
-                  placeholder="jane@example.com"
+                  placeholder="you@example.com"
                   value={form.email}
                   onChange={handleChange}
                   className={inputClass}
                 />
               </div>
+
               <div>
                 <label htmlFor="subject" className={labelClass}>
                   Subject
@@ -171,12 +174,13 @@ export default function ContactPage() {
                   name="subject"
                   type="text"
                   required
-                  placeholder="Story pitch, feedback, hello…"
+                  placeholder="What's this about?"
                   value={form.subject}
                   onChange={handleChange}
                   className={inputClass}
                 />
               </div>
+
               <div>
                 <label htmlFor="message" className={labelClass}>
                   Message
@@ -184,17 +188,18 @@ export default function ContactPage() {
                 <textarea
                   id="message"
                   name="message"
-                  required
                   rows={5}
-                  placeholder="Tell us what's on your mind…"
+                  required
+                  placeholder="Write your message here…"
                   value={form.message}
                   onChange={handleChange}
                   className={inputClass + " resize-none"}
                 />
               </div>
+
               <button
                 type="submit"
-                className="mt-1 w-full flex items-center justify-center gap-2 rounded-lg bg-blue-600 hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none text-white text-sm font-semibold px-5 py-2.5 transition-colors duration-200"
+                className="w-full flex items-center justify-center gap-2 rounded-lg bg-amber-500 hover:bg-amber-600 active:bg-amber-700 text-white font-semibold text-sm px-6 py-3 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
               >
                 <Send size={15} />
                 Send Message

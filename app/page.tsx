@@ -76,7 +76,7 @@ const recentPosts = [
 const topics = [
   { name: "Technology", slug: "technology", count: 34, color: "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300" },
   { name: "Design", slug: "design", count: 28, color: "bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-300" },
-  { name: "Philosophy", slug: "philosophy", count: 19, color: "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300" },
+  { name: "Philosophy", slug: "philosophy", count: 19, color: "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300" },
   { name: "Culture", slug: "culture", count: 41, color: "bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300" },
   { name: "Science", slug: "science", count: 22, color: "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300" },
   { name: "Writing", slug: "writing", count: 15, color: "bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300" },
@@ -87,353 +87,570 @@ const topics = [
 const testimonials = [
   {
     quote:
-      "Datics AI is the only publication I read start to finish. Every piece feels considered, unhurried, and worth my time.",
-    author: "Sofia Reyes",
+      "Inkwell is the only platform where I actually finish the articles I start. The writing is that good.",
+    name: "Sofia Reyes",
     role: "Product Designer",
-    avatar: "/images/testimonial-sofia.jpg",
+    avatar: "https://c.files.bbci.co.uk/1410C/production/_106288128_e5598e41-4c82-42a9-9bc8-a7d7e0fad917.jpg",
   },
   {
     quote:
-      "I've discovered more ideas that changed how I think here than anywhere else on the internet.",
-    author: "Daniel Park",
+      "I've been searching for a place that takes long-form seriously. Inkwell feels like the internet I remember loving.",
+    name: "Daniel Park",
     role: "Software Engineer",
-    avatar: "/images/testimonial-daniel.jpg",
+    avatar: "https://static.wikia.nocookie.net/questism/images/2/21/Daniel_park_lookism.png/revision/latest/scale-to-width/360?cb=20250423224202",
   },
   {
     quote:
-      "The writing here respects your intelligence. No clickbait, no filler — just ideas that matter.",
-    author: "Amara Diallo",
-    role: "Researcher",
-    avatar: "/images/testimonial-amara.jpg",
+      "Every Sunday morning I open Inkwell with coffee. It's become a ritual I genuinely look forward to.",
+    name: "Amara Diallo",
+    role: "Journalist",
+    avatar: "https://static.wikia.nocookie.net/questism/images/2/21/Daniel_park_lookism.png/revision/latest/scale-to-width/360?cb=20250423224202",
   },
 ];
 
-const stats = [
-  { label: "Articles Published", value: "240+", icon: BookOpen },
-  { label: "Monthly Readers", value: "18k", icon: Users },
-  { label: "Contributing Authors", value: "32", icon: Feather },
-  { label: "Topics Covered", value: "8", icon: Sparkles },
+const valueProps = [
+  {
+    icon: Feather,
+    title: "Write in Markdown",
+    description:
+      "A distraction-free editor with full Markdown support. Focus on your words — formatting follows naturally.",
+  },
+  {
+    icon: BookOpen,
+    title: "Built for Long-Form",
+    description:
+      "No character limits, no algorithmic pressure. Inkwell is designed for essays that breathe and ideas that take time to unfold.",
+  },
+  {
+    icon: Users,
+    title: "A Real Readership",
+    description:
+      "Your work reaches readers who chose depth over speed. No bots, no engagement farming — just genuine human attention.",
+  },
+  {
+    icon: Sparkles,
+    title: "Beautiful by Default",
+    description:
+      "Typography tuned for reading. Every post looks polished the moment you publish, on any device.",
+  },
 ];
 
-// ── Sub-components ────────────────────────────────────────────────────────────
+// ── Reusable sub-components (inline) ─────────────────────────────────────────
 
-function TagPill({ tag }: { tag: string }) {
-  return (
-    <span className="inline-block px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
-      {tag}
-    </span>
-  );
-}
+const tagPill = (tag: string, idx: number) => (
+  <span
+    key={idx}
+    className="inline-block px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400"
+  >
+    {tag}
+  </span>
+);
 
-function ReadTimeBadge({ minutes }: { minutes: number }) {
-  return (
-    <span className="inline-flex items-center gap-1 text-xs text-blue-600 dark:text-blue-400">
-      <Clock size={11} />
-      {minutes} min read
-    </span>
-  );
-}
+const hoverCard: Variants = {
+  rest: { y: 0, boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 4px 16px -4px rgba(0,0,0,0.08)" },
+  hover: { y: -4, boxShadow: "0 4px 8px rgba(0,0,0,0.06), 0 16px 40px -8px rgba(0,0,0,0.14)" },
+};
 
-function AuthorLine({
-  author,
-  date,
-  readTime,
-}: {
-  author: string;
-  date: string;
-  readTime: number;
-}) {
-  return (
-    <div className="flex items-center gap-3 text-xs text-blue-600 dark:text-blue-400">
-      <span className="font-medium text-blue-800 dark:text-blue-300">{author}</span>
-      <span className="w-1 h-1 rounded-full bg-blue-300 dark:bg-blue-600 inline-block" />
-      <span>{date}</span>
-      <span className="w-1 h-1 rounded-full bg-blue-300 dark:bg-blue-600 inline-block" />
-      <ReadTimeBadge minutes={readTime} />
-    </div>
-  );
-}
-
-// ── Page ──────────────────────────────────────────────────────────────────────
+// ── Page ─────────────────────────────────────────────────────────────────────
 
 export default function HomePage() {
   return (
-    <div className="bg-white dark:bg-blue-950 min-h-screen">
-      {/* ── HERO ── */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-white to-blue-50 dark:from-blue-950 dark:to-blue-950 pt-32 pb-20 sm:pt-40 sm:pb-28">
-        {/* Decorative blur */}
+    <main className="min-h-screen bg-stone-50 dark:bg-stone-950 text-stone-900 dark:text-stone-100">
+
+      {/* ── HERO ─────────────────────────────────────────────────────────── */}
+      <section className="relative overflow-hidden pt-28 pb-20 md:pt-36 md:pb-28">
+        {/* Subtle radial glow */}
         <div
           aria-hidden
-          className="pointer-events-none absolute -top-32 left-1/2 -translate-x-1/2 w-[700px] h-[400px] rounded-full bg-blue-100/60 dark:bg-blue-900/20 blur-3xl"
-        />
-        <div className="relative max-w-5xl mx-auto px-5 sm:px-8">
-          <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            animate="visible"
-            className="max-w-2xl"
-          >
-            <motion.div variants={fadeInUp} className="flex items-center gap-2 mb-6">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 text-xs font-semibold tracking-wide">
-                <Star size={11} className="fill-blue-500 text-blue-500" />
-                Editorial Platform
-              </span>
-            </motion.div>
-
-            <motion.h1
-              variants={fadeInUp}
-              className="font-lora text-4xl sm:text-5xl md:text-6xl font-bold leading-[1.12] tracking-tight text-blue-950 dark:text-white mb-6"
-            >
-              {APP_TAGLINE}
-              <br />
-              <span className="text-blue-600 dark:text-blue-400">Ideas that endure.</span>
-            </motion.h1>
-
-            <motion.p
-              variants={fadeInUp}
-              className="text-base sm:text-lg text-blue-700 dark:text-blue-300 leading-relaxed mb-8 max-w-xl"
-            >
-              {APP_DESCRIPTION} Thoughtful essays on technology, design, culture, and the ideas shaping how we live.
-            </motion.p>
-
-            <motion.div variants={fadeInUp} className="flex flex-wrap gap-3">
-              <Link
-                href="#articles"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold shadow-sm transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-              >
-                Start Reading
-                <ArrowRight size={15} />
-              </Link>
-              <Link
-                href="#write"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-200 text-sm font-semibold hover:bg-blue-50 dark:hover:bg-blue-900/40 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-              >
-                Write a Post
-              </Link>
-            </motion.div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ── STATS BAR ── */}
-      <section className="border-y border-blue-100 dark:border-blue-900 bg-white dark:bg-blue-950">
-        <div className="max-w-5xl mx-auto px-5 sm:px-8 py-8">
-          <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-60px" }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-6"
-          >
-            {stats.map(({ label, value, icon: Icon }) => (
-              <motion.div
-                key={label}
-                variants={fadeInUp}
-                className="flex flex-col items-center text-center gap-1"
-              >
-                <Icon size={18} className="text-blue-500 dark:text-blue-400 mb-1" />
-                <span className="font-lora text-2xl font-bold text-blue-950 dark:text-white">{value}</span>
-                <span className="text-xs text-blue-600 dark:text-blue-400">{label}</span>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ── FEATURED POST ── */}
-      <section className="max-w-5xl mx-auto px-5 sm:px-8 py-16 sm:py-20">
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-60px" }}
+          className="pointer-events-none absolute inset-0 flex items-start justify-center"
         >
-          <motion.div variants={fadeInUp} className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-2">
-              <Star size={15} className="fill-blue-500 text-blue-500" />
-              <span className="text-xs font-semibold uppercase tracking-widest text-blue-600 dark:text-blue-400">
-                Featured Essay
-              </span>
-            </div>
-          </motion.div>
+          <div className="w-[700px] h-[400px] rounded-full bg-amber-400/10 dark:bg-amber-500/8 blur-3xl translate-y-8" />
+        </div>
 
-          <motion.div variants={scaleIn}>
-            <Link
-              href={`/post/${featuredPost.slug}`}
-              className="group block rounded-2xl overflow-hidden border border-blue-100 dark:border-blue-900 bg-white dark:bg-blue-950 hover:border-blue-300 dark:hover:border-blue-700 transition-all duration-300 shadow-sm hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+        <div className="relative max-w-5xl mx-auto px-5 sm:px-8">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            {/* Left: copy */}
+            <motion.div
+              variants={staggerContainer}
+              initial="hidden"
+              animate="visible"
+              className="flex flex-col gap-6"
             >
-              <div className="grid md:grid-cols-2 gap-0">
-                {/* Cover image placeholder */}
-                <div className="relative h-56 md:h-auto bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 flex items-center justify-center">
-                  <BookOpen size={48} className="text-blue-300 dark:text-blue-600" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-blue-950/20 to-transparent" />
+              <motion.div variants={fadeInUp}>
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-amber-300/60 dark:border-amber-700/50 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 text-xs font-semibold tracking-wide uppercase">
+                  <Sparkles size={11} />
+                  Writing worth reading
+                </span>
+              </motion.div>
+
+              <motion.h1
+                variants={fadeInUp}
+                className="font-lora text-4xl sm:text-5xl md:text-[3.25rem] font-bold leading-[1.12] tracking-tight text-stone-900 dark:text-stone-50 text-balance"
+              >
+                Ideas deserve more than a{" "}
+                <span className="text-amber-500">scroll.</span>
+              </motion.h1>
+
+              <motion.p
+                variants={fadeInUp}
+                className="text-stone-500 dark:text-stone-400 text-lg leading-relaxed text-pretty max-w-md"
+              >
+                {APP_DESCRIPTION} Discover essays that linger, arguments that challenge, and stories that stay with you.
+              </motion.p>
+
+              <motion.div variants={fadeInUp} className="flex flex-wrap gap-3 pt-1">
+                <motion.a
+                  href="#articles"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.querySelector("#articles")?.scrollIntoView({ behavior: "smooth" });
+                  }}
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold shadow-[0_2px_8px_rgba(245,158,11,0.35)] transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2"
+                >
+                  Start Reading <ArrowRight size={15} />
+                </motion.a>
+                <motion.a
+                  href="#write"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.querySelector("#write")?.scrollIntoView({ behavior: "smooth" });
+                  }}
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-stone-300 dark:border-stone-700 text-stone-700 dark:text-stone-300 hover:border-amber-400 dark:hover:border-amber-600 hover:text-amber-600 dark:hover:text-amber-400 text-sm font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2"
+                >
+                  Start Writing
+                </motion.a>
+              </motion.div>
+
+              <motion.div variants={fadeIn} className="flex items-center gap-4 pt-2">
+                <div className="flex -space-x-2">
+                  {["https://c.files.bbci.co.uk/1410C/production/_106288128_e5598e41-4c82-42a9-9bc8-a7d7e0fad917.jpg", "https://static.wikia.nocookie.net/questism/images/2/21/Daniel_park_lookism.png/revision/latest/scale-to-width/360?cb=20250423224202", "https://static.wikia.nocookie.net/questism/images/2/21/Daniel_park_lookism.png/revision/latest/scale-to-width/360?cb=20250423224202"].map((src, i) => (
+                    <img
+                      key={i}
+                      src={src}
+                      alt="Reader"
+                      className="w-8 h-8 rounded-full border-2 border-stone-50 dark:border-stone-950 object-cover"
+                    />
+                  ))}
                 </div>
-                {/* Content */}
-                <div className="p-8 md:p-10 flex flex-col justify-center">
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {featuredPost.tags.map((tag) => (
-                      <TagPill key={tag} tag={tag} />
-                    ))}
+                <p className="text-sm text-stone-500 dark:text-stone-400">
+                  Joined by <span className="font-semibold text-stone-700 dark:text-stone-300">4,200+</span> readers
+                </p>
+              </motion.div>
+            </motion.div>
+
+            {/* Right: featured post card */}
+            <motion.div
+              variants={scaleIn}
+              initial="hidden"
+              animate="visible"
+              className="relative"
+            >
+              <motion.div
+                variants={hoverCard}
+                initial="rest"
+                whileHover="hover"
+                transition={{ duration: 0.3, ease: "easeOut" }}
+                className="rounded-2xl overflow-hidden border border-stone-200/80 dark:border-stone-800/80 bg-white dark:bg-stone-900"
+              >
+                <div className="relative h-52 overflow-hidden">
+                  <img
+                    src={featuredPost.coverImage}
+                    alt={featuredPost.title}
+                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                  <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-amber-500 text-white text-xs font-semibold">
+                    Featured
+                  </span>
+                </div>
+                <div className="p-5">
+                  <div className="flex flex-wrap gap-1.5 mb-3">
+                    {(featuredPost.tags ?? []).map((t, i) => tagPill(t, i))}
                   </div>
-                  <h2 className="font-lora text-2xl sm:text-3xl font-bold text-blue-950 dark:text-white leading-snug mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200">
+                  <h2 className="font-lora font-bold text-xl leading-snug text-stone-900 dark:text-stone-100 mb-2 text-balance">
                     {featuredPost.title}
                   </h2>
-                  <p className="text-blue-700 dark:text-blue-300 text-sm leading-relaxed mb-6">
+                  <p className="text-sm text-stone-500 dark:text-stone-400 leading-relaxed line-clamp-2 mb-4">
                     {featuredPost.excerpt}
                   </p>
-                  <AuthorLine
-                    author={featuredPost.author}
-                    date={featuredPost.date}
-                    readTime={featuredPost.readTime}
-                  />
-                  <div className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-blue-600 dark:text-blue-400 group-hover:gap-2.5 transition-all duration-200">
-                    Read Essay <ArrowRight size={14} />
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <img
+                        src={featuredPost.authorAvatar}
+                        alt={featuredPost.author}
+                        className="w-7 h-7 rounded-full object-cover border border-stone-200 dark:border-stone-700"
+                      />
+                      <span className="text-xs font-medium text-stone-600 dark:text-stone-400">
+                        {featuredPost.author}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1 text-xs text-stone-400 dark:text-stone-500">
+                      <Clock size={12} />
+                      {featuredPost.readTime} min read
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Link>
-          </motion.div>
-        </motion.div>
+              </motion.div>
+
+              {/* Decorative offset card */}
+              <div
+                aria-hidden
+                className="absolute -bottom-3 -right-3 -z-10 w-full h-full rounded-2xl border border-amber-200/60 dark:border-amber-800/30 bg-amber-50/60 dark:bg-amber-900/10"
+              />
+            </motion.div>
+          </div>
+        </div>
       </section>
 
-      {/* ── RECENT POSTS ── */}
-      <section id="articles" className="bg-blue-50 dark:bg-blue-950 border-y border-blue-100 dark:border-blue-900 py-16 sm:py-20">
+      {/* ── ARTICLES ─────────────────────────────────────────────────────── */}
+      <section id="articles" className="py-20 md:py-28 bg-white dark:bg-stone-900">
         <div className="max-w-5xl mx-auto px-5 sm:px-8">
           <motion.div
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: "-60px" }}
+            viewport={{ once: true, margin: "-80px" }}
           >
-            <motion.div variants={fadeInUp} className="flex items-center justify-between mb-10">
+            <motion.div variants={fadeInUp} className="flex items-end justify-between mb-10">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-widest text-blue-600 dark:text-blue-400 mb-1">Latest</p>
-                <h2 className="font-lora text-2xl sm:text-3xl font-bold text-blue-950 dark:text-white">Recent Articles</h2>
+                <p className="text-xs font-semibold uppercase tracking-widest text-amber-500 mb-2">
+                  Recent Essays
+                </p>
+                <h2 className="font-lora text-3xl sm:text-4xl font-bold tracking-tight text-stone-900 dark:text-stone-100">
+                  What we're reading
+                </h2>
               </div>
-              <Link
-                href="#"
-                className="hidden sm:inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
+              <a
+                href="#topics"
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.querySelector("#topics")?.scrollIntoView({ behavior: "smooth" });
+                }}
+                className="hidden sm:inline-flex items-center gap-1 text-sm font-medium text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300 transition-colors"
               >
-                View all <ChevronRight size={15} />
-              </Link>
+                Browse topics <ChevronRight size={15} />
+              </a>
             </motion.div>
 
-            <motion.div
-              variants={staggerContainer}
-              className="grid sm:grid-cols-2 gap-6"
-            >
-              {recentPosts.map((post) => (
-                <motion.div key={post.slug} variants={fadeInUp}>
-                  <Link
-                    href={`/post/${post.slug}`}
-                    className="group flex flex-col h-full rounded-xl border border-blue-100 dark:border-blue-900 bg-white dark:bg-blue-950 hover:border-blue-300 dark:hover:border-blue-700 transition-all duration-300 shadow-sm hover:shadow-md overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+            {/* Asymmetric grid: 2 cols top, then 2 cols bottom with different proportions */}
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+              {/* Large card */}
+              {recentPosts[0] && (
+                <motion.article
+                  variants={slideInLeft}
+                  className="md:col-span-3"
+                >
+                  <motion.div
+                    variants={hoverCard}
+                    initial="rest"
+                    whileHover="hover"
+                    transition={{ duration: 0.3, ease: "easeOut" }}
+                    className="h-full rounded-2xl overflow-hidden border border-stone-200/80 dark:border-stone-800/80 bg-stone-50 dark:bg-stone-950 flex flex-col"
                   >
-                    {/* Cover placeholder */}
-                    <div className="h-36 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/50 dark:to-blue-800/50 flex items-center justify-center">
-                      <BookOpen size={28} className="text-blue-200 dark:text-blue-700" />
-                    </div>
-                    <div className="p-5 flex flex-col flex-1">
-                      <div className="flex flex-wrap gap-1.5 mb-3">
-                        {post.tags.map((tag) => (
-                          <TagPill key={tag} tag={tag} />
-                        ))}
-                      </div>
-                      <h3 className="font-lora text-lg font-bold text-blue-950 dark:text-white leading-snug mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200">
-                        {post.title}
-                      </h3>
-                      <p className="text-sm text-blue-700 dark:text-blue-300 leading-relaxed flex-1 mb-4">
-                        {post.excerpt}
-                      </p>
-                      <AuthorLine
-                        author={post.author}
-                        date={post.date}
-                        readTime={post.readTime}
+                    <div className="relative h-56 overflow-hidden">
+                      <img
+                        src={recentPosts[0].coverImage}
+                        alt={recentPosts[0].title}
+                        className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                       />
                     </div>
-                  </Link>
-                </motion.div>
-              ))}
-            </motion.div>
+                    <div className="p-6 flex flex-col flex-1">
+                      <div className="flex flex-wrap gap-1.5 mb-3">
+                        {(recentPosts[0].tags ?? []).map((t, i) => tagPill(t, i))}
+                      </div>
+                      <h3 className="font-lora font-bold text-xl leading-snug text-stone-900 dark:text-stone-100 mb-2">
+                        {recentPosts[0].title}
+                      </h3>
+                      <p className="text-sm text-stone-500 dark:text-stone-400 leading-relaxed flex-1 mb-4">
+                        {recentPosts[0].excerpt}
+                      </p>
+                      <div className="flex items-center justify-between mt-auto">
+                        <div className="flex items-center gap-2">
+                          <img
+                            src={recentPosts[0].authorAvatar}
+                            alt={recentPosts[0].author}
+                            className="w-7 h-7 rounded-full object-cover border border-stone-200 dark:border-stone-700"
+                          />
+                          <div>
+                            <p className="text-xs font-semibold text-stone-700 dark:text-stone-300">
+                              {recentPosts[0].author}
+                            </p>
+                            <p className="text-xs text-stone-400 dark:text-stone-500">
+                              {recentPosts[0].date}
+                            </p>
+                          </div>
+                        </div>
+                        <span className="flex items-center gap-1 text-xs text-stone-400 dark:text-stone-500">
+                          <Clock size={12} /> {recentPosts[0].readTime} min
+                        </span>
+                      </div>
+                    </div>
+                  </motion.div>
+                </motion.article>
+              )}
 
-            <motion.div variants={fadeInUp} className="mt-8 text-center sm:hidden">
-              <Link
-                href="#"
-                className="inline-flex items-center gap-1.5 text-sm font-medium text-blue-600 dark:text-blue-400"
-              >
-                View all articles <ChevronRight size={15} />
-              </Link>
-            </motion.div>
+              {/* Stack of 2 smaller cards */}
+              <div className="md:col-span-2 flex flex-col gap-6">
+                {(recentPosts.slice(1, 3) ?? []).map((post, idx) => (
+                  <motion.article
+                    key={post.slug}
+                    variants={fadeInUp}
+                    custom={idx}
+                  >
+                    <motion.div
+                      variants={hoverCard}
+                      initial="rest"
+                      whileHover="hover"
+                      transition={{ duration: 0.3, ease: "easeOut" }}
+                      className="rounded-2xl overflow-hidden border border-stone-200/80 dark:border-stone-800/80 bg-stone-50 dark:bg-stone-950 flex gap-4 p-4"
+                    >
+                      <div className="relative w-20 h-20 flex-shrink-0 rounded-xl overflow-hidden">
+                        <img
+                          src={post.coverImage}
+                          alt={post.title}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div className="flex flex-col justify-between min-w-0">
+                        <div>
+                          <div className="flex flex-wrap gap-1 mb-1.5">
+                            {(post.tags ?? []).slice(0, 1).map((t, i) => tagPill(t, i))}
+                          </div>
+                          <h3 className="font-lora font-bold text-sm leading-snug text-stone-900 dark:text-stone-100 line-clamp-2">
+                            {post.title}
+                          </h3>
+                        </div>
+                        <div className="flex items-center gap-2 mt-2">
+                          <span className="text-xs text-stone-500 dark:text-stone-400">{post.author}</span>
+                          <span className="text-stone-300 dark:text-stone-700">·</span>
+                          <span className="flex items-center gap-0.5 text-xs text-stone-400 dark:text-stone-500">
+                            <Clock size={11} /> {post.readTime}m
+                          </span>
+                        </div>
+                      </div>
+                    </motion.div>
+                  </motion.article>
+                ))}
+              </div>
+
+              {/* Full-width horizontal card */}
+              {recentPosts[3] && (
+                <motion.article variants={fadeInUp} className="md:col-span-5">
+                  <motion.div
+                    variants={hoverCard}
+                    initial="rest"
+                    whileHover="hover"
+                    transition={{ duration: 0.3, ease: "easeOut" }}
+                    className="rounded-2xl overflow-hidden border border-stone-200/80 dark:border-stone-800/80 bg-stone-50 dark:bg-stone-950 flex flex-col sm:flex-row gap-0"
+                  >
+                    <div className="relative sm:w-64 h-48 sm:h-auto flex-shrink-0 overflow-hidden">
+                      <img
+                        src={recentPosts[3].coverImage}
+                        alt={recentPosts[3].title}
+                        className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                      />
+                    </div>
+                    <div className="p-6 flex flex-col justify-center">
+                      <div className="flex flex-wrap gap-1.5 mb-3">
+                        {(recentPosts[3].tags ?? []).map((t, i) => tagPill(t, i))}
+                      </div>
+                      <h3 className="font-lora font-bold text-xl leading-snug text-stone-900 dark:text-stone-100 mb-2">
+                        {recentPosts[3].title}
+                      </h3>
+                      <p className="text-sm text-stone-500 dark:text-stone-400 leading-relaxed mb-4 max-w-xl">
+                        {recentPosts[3].excerpt}
+                      </p>
+                      <div className="flex items-center gap-3">
+                        <img
+                          src={recentPosts[3].authorAvatar}
+                          alt={recentPosts[3].author}
+                          className="w-7 h-7 rounded-full object-cover border border-stone-200 dark:border-stone-700"
+                        />
+                        <span className="text-xs font-medium text-stone-600 dark:text-stone-400">
+                          {recentPosts[3].author}
+                        </span>
+                        <span className="text-stone-300 dark:text-stone-700">·</span>
+                        <span className="text-xs text-stone-400 dark:text-stone-500">{recentPosts[3].date}</span>
+                        <span className="text-stone-300 dark:text-stone-700">·</span>
+                        <span className="flex items-center gap-1 text-xs text-stone-400 dark:text-stone-500">
+                          <Clock size={12} /> {recentPosts[3].readTime} min read
+                        </span>
+                      </div>
+                    </div>
+                  </motion.div>
+                </motion.article>
+              )}
+            </div>
           </motion.div>
         </div>
       </section>
 
-      {/* ── TOPICS ── */}
-      <section id="topics" className="max-w-5xl mx-auto px-5 sm:px-8 py-16 sm:py-20">
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-60px" }}
-        >
-          <motion.div variants={fadeInUp} className="mb-10">
-            <p className="text-xs font-semibold uppercase tracking-widest text-blue-600 dark:text-blue-400 mb-1">Browse</p>
-            <h2 className="font-lora text-2xl sm:text-3xl font-bold text-blue-950 dark:text-white">Explore Topics</h2>
-          </motion.div>
-
-          <motion.div
-            variants={staggerContainer}
-            className="grid grid-cols-2 sm:grid-cols-4 gap-3"
-          >
-            {topics.map((topic) => (
-              <motion.div key={topic.slug} variants={scaleIn}>
-                <Link
-                  href={`/tags/${topic.slug}`}
-                  className={`group flex flex-col items-start p-4 rounded-xl border border-blue-100 dark:border-blue-900 bg-white dark:bg-blue-950 hover:border-blue-300 dark:hover:border-blue-700 transition-all duration-200 shadow-sm hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500`}
-                >
-                  <span className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold mb-3 ${topic.color}`}>
-                    {topic.name}
-                  </span>
-                  <span className="text-xl font-bold text-blue-950 dark:text-white">{topic.count}</span>
-                  <span className="text-xs text-blue-600 dark:text-blue-400">articles</span>
-                </Link>
-              </motion.div>
-            ))}
-          </motion.div>
-        </motion.div>
-      </section>
-
-      {/* ── TESTIMONIALS ── */}
-      <section className="bg-blue-50 dark:bg-blue-950 border-y border-blue-100 dark:border-blue-900 py-16 sm:py-20">
+      {/* ── TOPICS ───────────────────────────────────────────────────────── */}
+      <section id="topics" className="py-20 md:py-28 bg-stone-50 dark:bg-stone-950">
         <div className="max-w-5xl mx-auto px-5 sm:px-8">
           <motion.div
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: "-60px" }}
+            viewport={{ once: true, margin: "-80px" }}
           >
             <motion.div variants={fadeInUp} className="text-center mb-12">
-              <p className="text-xs font-semibold uppercase tracking-widest text-blue-600 dark:text-blue-400 mb-1">Readers Say</p>
-              <h2 className="font-lora text-2xl sm:text-3xl font-bold text-blue-950 dark:text-white">Why Readers Love {APP_NAME}</h2>
+              <p className="text-xs font-semibold uppercase tracking-widest text-amber-500 mb-2">
+                Browse by Topic
+              </p>
+              <h2 className="font-lora text-3xl sm:text-4xl font-bold tracking-tight text-stone-900 dark:text-stone-100 mb-3">
+                Find your corner
+              </h2>
+              <p className="text-stone-500 dark:text-stone-400 max-w-md mx-auto leading-relaxed">
+                From technology to fermentation, Inkwell covers the full range of human curiosity — in depth.
+              </p>
             </motion.div>
 
             <motion.div
               variants={staggerContainer}
-              className="grid sm:grid-cols-3 gap-6"
+              className="flex flex-wrap justify-center gap-3"
             >
-              {testimonials.map((t) => (
-                <motion.div
-                  key={t.author}
-                  variants={fadeInUp}
-                  className="rounded-xl border border-blue-100 dark:border-blue-900 bg-white dark:bg-blue-950 p-6 flex flex-col gap-4"
+              {topics.map((topic) => (
+                <motion.a
+                  key={topic.slug}
+                  href="#articles"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.querySelector("#articles")?.scrollIntoView({ behavior: "smooth" });
+                  }}
+                  variants={scaleIn}
+                  whileHover={{ scale: 1.06, y: -2 }}
+                  whileTap={{ scale: 0.97 }}
+                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold border border-transparent transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 ${topic.color}`}
                 >
-                  <p className="text-sm text-blue-700 dark:text-blue-300 leading-relaxed italic">&ldquo;{t.quote}&rdquo;</p>
-                  <div className="flex items-center gap-3 mt-auto">
-                    <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-xs font-bold text-blue-600 dark:text-blue-400">
-                      {t.author[0]}
-                    </div>
+                  {topic.name}
+                  <span className="text-xs opacity-60 font-normal">{topic.count}</span>
+                </motion.a>
+              ))}
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── VALUE PROPS ──────────────────────────────────────────────────── */}
+      <section className="py-20 md:py-28 bg-white dark:bg-stone-900">
+        <div className="max-w-5xl mx-auto px-5 sm:px-8">
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-80px" }}
+          >
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              {/* Left: heading + description */}
+              <motion.div variants={slideInLeft} className="flex flex-col gap-5">
+                <p className="text-xs font-semibold uppercase tracking-widest text-amber-500">
+                  The Platform
+                </p>
+                <h2 className="font-lora text-3xl sm:text-4xl font-bold tracking-tight text-stone-900 dark:text-stone-100 text-balance">
+                  Built for writers who care about craft.
+                </h2>
+                <p className="text-stone-500 dark:text-stone-400 leading-relaxed text-pretty">
+                  Inkwell strips away everything that gets between a writer and their reader. No vanity metrics, no algorithmic pressure. Just a clean canvas and an audience that chose to be here.
+                </p>
+                <motion.a
+                  href="#write"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.querySelector("#write")?.scrollIntoView({ behavior: "smooth" });
+                  }}
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="self-start inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold shadow-[0_2px_8px_rgba(245,158,11,0.35)] transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2"
+                >
+                  Start writing free <ArrowRight size={15} />
+                </motion.a>
+              </motion.div>
+
+              {/* Right: bento of value props */}
+              <motion.div
+                variants={staggerContainer}
+                className="grid grid-cols-2 gap-4"
+              >
+                {valueProps.map((vp, idx) => {
+                  const Icon = vp.icon;
+                  return (
+                    <motion.div
+                      key={idx}
+                      variants={scaleIn}
+                      whileHover={{ y: -3, transition: { duration: 0.2 } }}
+                      className={`rounded-2xl p-5 border border-stone-200/80 dark:border-stone-800/80 bg-stone-50 dark:bg-stone-950 flex flex-col gap-3 shadow-[0_1px_2px_rgba(0,0,0,0.04),0_4px_16px_-4px_rgba(0,0,0,0.06)] ${idx === 0 ? "col-span-2 sm:col-span-1" : ""}`}
+                    >
+                      <span className="w-9 h-9 rounded-xl bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
+                        <Icon size={18} className="text-amber-600 dark:text-amber-400" />
+                      </span>
+                      <div>
+                        <h3 className="font-semibold text-sm text-stone-900 dark:text-stone-100 mb-1">
+                          {vp.title}
+                        </h3>
+                        <p className="text-xs text-stone-500 dark:text-stone-400 leading-relaxed">
+                          {vp.description}
+                        </p>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </motion.div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── TESTIMONIALS ─────────────────────────────────────────────────── */}
+      <section className="py-20 md:py-28 bg-stone-50 dark:bg-stone-950">
+        <div className="max-w-5xl mx-auto px-5 sm:px-8">
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-80px" }}
+          >
+            <motion.div variants={fadeInUp} className="text-center mb-12">
+              <p className="text-xs font-semibold uppercase tracking-widest text-amber-500 mb-2">
+                Readers Say
+              </p>
+              <h2 className="font-lora text-3xl sm:text-4xl font-bold tracking-tight text-stone-900 dark:text-stone-100">
+                Words from the community
+              </h2>
+            </motion.div>
+
+            <motion.div
+              variants={staggerContainer}
+              className="grid grid-cols-1 md:grid-cols-3 gap-6"
+            >
+              {testimonials.map((t, idx) => (
+                <motion.div
+                  key={idx}
+                  variants={fadeInUp}
+                  whileHover={{ y: -4, transition: { duration: 0.25 } }}
+                  className="rounded-2xl p-6 border border-stone-200/80 dark:border-stone-800/80 bg-white dark:bg-stone-900 shadow-[0_1px_2px_rgba(0,0,0,0.04),0_8px_24px_-8px_rgba(0,0,0,0.08)] flex flex-col gap-4"
+                >
+                  <div className="flex gap-0.5">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Star key={i} size={13} className="fill-amber-400 text-amber-400" />
+                    ))}
+                  </div>
+                  <p className="text-sm text-stone-600 dark:text-stone-400 leading-relaxed flex-1 italic">
+                    &ldquo;{t.quote}&rdquo;
+                  </p>
+                  <div className="flex items-center gap-3 pt-2 border-t border-stone-100 dark:border-stone-800">
+                    <img
+                      src={t.avatar}
+                      alt={t.name}
+                      className="w-9 h-9 rounded-full object-cover border border-stone-200 dark:border-stone-700"
+                    />
                     <div>
-                      <p className="text-xs font-semibold text-blue-950 dark:text-white">{t.author}</p>
-                      <p className="text-xs text-blue-600 dark:text-blue-400">{t.role}</p>
+                      <p className="text-sm font-semibold text-stone-800 dark:text-stone-200">{t.name}</p>
+                      <p className="text-xs text-stone-400 dark:text-stone-500">{t.role}</p>
                     </div>
                   </div>
                 </motion.div>
@@ -443,109 +660,128 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── NEWSLETTER ── */}
-      <section className="max-w-5xl mx-auto px-5 sm:px-8 py-16 sm:py-20">
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-60px" }}
-        >
-          <motion.div
-            variants={scaleIn}
-            className="rounded-2xl bg-blue-600 dark:bg-blue-800 p-10 sm:p-14 text-center relative overflow-hidden"
-          >
-            {/* Decorative */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute -top-16 -right-16 w-64 h-64 rounded-full bg-blue-500/30 blur-3xl"
-            />
-            <div
-              aria-hidden
-              className="pointer-events-none absolute -bottom-16 -left-16 w-64 h-64 rounded-full bg-blue-700/30 blur-3xl"
-            />
-
-            <div className="relative">
-              <Mail size={28} className="text-blue-200 mx-auto mb-4" />
-              <h2 className="font-lora text-2xl sm:text-3xl font-bold text-white mb-3">
-                Get the best essays in your inbox
-              </h2>
-              <p className="text-blue-100 text-sm sm:text-base mb-8 max-w-md mx-auto">
-                Join 18,000+ readers who get our weekly digest of the most thoughtful writing on the web.
-              </p>
-              <form
-                onSubmit={(e) => e.preventDefault()}
-                className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
-              >
-                <input
-                  type="email"
-                  placeholder="your@email.com"
-                  className="flex-1 px-4 py-2.5 rounded-full bg-white/20 border border-white/30 text-white placeholder:text-blue-200 text-sm focus:outline-none focus:ring-2 focus:ring-white/50 backdrop-blur-sm"
-                />
-                <button
-                  type="submit"
-                  className="px-6 py-2.5 rounded-full bg-white text-blue-700 text-sm font-semibold hover:bg-blue-50 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
-                >
-                  Subscribe
-                </button>
-              </form>
-              <p className="text-xs text-blue-200 mt-4">No spam. Unsubscribe anytime.</p>
-            </div>
-          </motion.div>
-        </motion.div>
-      </section>
-
-      {/* ── ABOUT / CTA ── */}
-      <section id="about" className="bg-blue-50 dark:bg-blue-950 border-t border-blue-100 dark:border-blue-900 py-16 sm:py-20">
+      {/* ── ABOUT ────────────────────────────────────────────────────────── */}
+      <section id="about" className="py-20 md:py-28 bg-white dark:bg-stone-900">
         <div className="max-w-5xl mx-auto px-5 sm:px-8">
           <motion.div
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: "-60px" }}
+            viewport={{ once: true, margin: "-80px" }}
             className="grid md:grid-cols-2 gap-12 items-center"
           >
-            <motion.div variants={slideInLeft}>
-              <p className="text-xs font-semibold uppercase tracking-widest text-blue-600 dark:text-blue-400 mb-2">About</p>
-              <h2 className="font-lora text-2xl sm:text-3xl font-bold text-blue-950 dark:text-white mb-4">
-                A home for writing that matters
-              </h2>
-              <p className="text-blue-700 dark:text-blue-300 text-sm leading-relaxed mb-4">
-                {APP_NAME} is an editorial platform built for writers who care about craft and readers who value depth. We publish long-form essays, interviews, and ideas across technology, design, culture, and beyond.
-              </p>
-              <p className="text-blue-700 dark:text-blue-300 text-sm leading-relaxed mb-6">
-                Every piece is edited, considered, and written to last longer than a news cycle.
-              </p>
-              <Link
-                href="#write"
-                id="write"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold shadow-sm transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+            <motion.div variants={scaleIn} className="relative order-2 md:order-1">
+              <div className="rounded-2xl overflow-hidden border border-stone-200/80 dark:border-stone-800/80 shadow-[0_4px_8px_rgba(0,0,0,0.06),0_16px_40px_-8px_rgba(0,0,0,0.12)]">
+                <img
+                  src="https://i0.wp.com/inkwellseditor.com/wp-content/uploads/2021/03/pexels-photo-5324992-1024x682.jpeg?resize=640%2C426&ssl=1"
+                  alt="The Inkwell editorial team at work"
+                  className="w-full h-72 object-cover"
+                />
+              </div>
+              {/* Stat badge */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.3, duration: 0.4, ease: "easeOut" }}
+                className="absolute -bottom-5 -right-4 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl px-5 py-3 shadow-[0_4px_16px_rgba(0,0,0,0.1)]"
               >
-                Start Writing
-                <ArrowRight size={15} />
-              </Link>
+                <p className="text-2xl font-bold text-stone-900 dark:text-stone-100 font-lora">240+</p>
+                <p className="text-xs text-stone-500 dark:text-stone-400">essays published</p>
+              </motion.div>
             </motion.div>
 
-            <motion.div variants={fadeInUp} className="grid grid-cols-2 gap-4">
-              {[
-                { icon: Feather, title: "Markdown Editor", desc: "Write with a distraction-free editor with live preview." },
-                { icon: BookOpen, title: "Long-form Focus", desc: "Typography and layout optimized for deep reading." },
-                { icon: Users, title: "Community Authors", desc: "32 contributing writers across disciplines." },
-                { icon: Sparkles, title: "Curated Quality", desc: "Every post is reviewed before it goes live." },
-              ].map(({ icon: Icon, title, desc }) => (
-                <div
-                  key={title}
-                  className="rounded-xl border border-blue-100 dark:border-blue-900 bg-white dark:bg-blue-950 p-5"
-                >
-                  <Icon size={18} className="text-blue-500 dark:text-blue-400 mb-3" />
-                  <p className="text-sm font-semibold text-blue-950 dark:text-white mb-1">{title}</p>
-                  <p className="text-xs text-blue-600 dark:text-blue-400 leading-relaxed">{desc}</p>
+            <motion.div variants={fadeInUp} className="flex flex-col gap-5 order-1 md:order-2">
+              <p className="text-xs font-semibold uppercase tracking-widest text-amber-500">
+                About Inkwell
+              </p>
+              <h2 className="font-lora text-3xl sm:text-4xl font-bold tracking-tight text-stone-900 dark:text-stone-100 text-balance">
+                We believe the long read is far from dead.
+              </h2>
+              <p className="text-stone-500 dark:text-stone-400 leading-relaxed text-pretty">
+                Inkwell was founded in 2023 by a small team of writers and engineers who were tired of watching great ideas get compressed into threads and hot takes. We built the platform we wanted to read.
+              </p>
+              <p className="text-stone-500 dark:text-stone-400 leading-relaxed text-pretty">
+                Every piece on Inkwell is edited, considered, and published because it earns its place — not because an algorithm decided it was trending. We're independent, reader-supported, and proud of it.
+              </p>
+              <div className="flex items-center gap-6 pt-2">
+                <div>
+                  <p className="text-2xl font-bold text-stone-900 dark:text-stone-100 font-lora">4.2k</p>
+                  <p className="text-xs text-stone-500 dark:text-stone-400">active readers</p>
                 </div>
-              ))}
+                <div className="w-px h-10 bg-stone-200 dark:bg-stone-800" />
+                <div>
+                  <p className="text-2xl font-bold text-stone-900 dark:text-stone-100 font-lora">87</p>
+                  <p className="text-xs text-stone-500 dark:text-stone-400">contributing writers</p>
+                </div>
+                <div className="w-px h-10 bg-stone-200 dark:bg-stone-800" />
+                <div>
+                  <p className="text-2xl font-bold text-stone-900 dark:text-stone-100 font-lora">9.1</p>
+                  <p className="text-xs text-stone-500 dark:text-stone-400">avg. min read time</p>
+                </div>
+              </div>
             </motion.div>
           </motion.div>
         </div>
       </section>
-    </div>
+
+      {/* ── WRITE / CTA ──────────────────────────────────────────────────── */}
+      <section id="write" className="py-20 md:py-28 bg-stone-50 dark:bg-stone-950">
+        <div className="max-w-5xl mx-auto px-5 sm:px-8">
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-80px" }}
+          >
+            <motion.div
+              variants={scaleIn}
+              className="relative rounded-3xl overflow-hidden bg-stone-900 dark:bg-stone-800 border border-stone-800 dark:border-stone-700 px-8 py-16 md:px-16 md:py-20 text-center"
+            >
+              {/* Glow */}
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-0 flex items-center justify-center"
+              >
+                <div className="w-[500px] h-[300px] rounded-full bg-amber-500/15 blur-3xl" />
+              </div>
+
+              <div className="relative z-10 flex flex-col items-center gap-6 max-w-xl mx-auto">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-amber-500/30 bg-amber-500/10 text-amber-400 text-xs font-semibold tracking-wide uppercase">
+                  <Feather size={11} />
+                  Open to all writers
+                </span>
+                <h2 className="font-lora text-3xl sm:text-4xl font-bold tracking-tight text-white text-balance">
+                  Your ideas deserve a proper home.
+                </h2>
+                <p className="text-stone-400 leading-relaxed text-pretty">
+                  Publish your first essay on Inkwell for free. Write in Markdown, reach readers who care, and join a community that takes the craft seriously.
+                </p>
+
+                {/* Email capture */}
+                <div className="w-full max-w-sm flex flex-col sm:flex-row gap-3 mt-2">
+                  <input
+                    type="email"
+                    placeholder="your@email.com"
+                    className="flex-1 px-4 py-2.5 rounded-full bg-white/10 border border-white/15 text-white placeholder:text-stone-500 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200"
+                    readOnly
+                  />
+                  <motion.button
+                    whileHover={{ scale: 1.04 }}
+                    whileTap={{ scale: 0.97 }}
+                    className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-amber-500 hover:bg-amber-600 text-white text-sm font-semibold shadow-[0_2px_8px_rgba(245,158,11,0.4)] transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 whitespace-nowrap"
+                  >
+                    <Mail size={14} /> Get early access
+                  </motion.button>
+                </div>
+                <p className="text-xs text-stone-500">
+                  No spam. Unsubscribe any time. Free forever for independent writers.
+                </p>
+              </div>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+    </main>
   );
 }
