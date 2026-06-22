@@ -13,6 +13,7 @@ export const navLinks: NavLink[] = [
   { label: "Articles", href: "#articles" },
   { label: "Topics", href: "#topics" },
   { label: "About", href: "#about" },
+  { label: "Contact", href: "/contact" },
 ];
 
 export const navCTA = {
