@@ -42,4 +42,4 @@ export interface Tag {
   count: number;
 }
 
-export const ACCENT_COLOR = "amber";
+export const ACCENT_COLOR = "blue";
