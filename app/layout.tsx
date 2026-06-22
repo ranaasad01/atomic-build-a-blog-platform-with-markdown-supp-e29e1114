@@ -18,17 +18,17 @@ const lora = Lora({
 
 export const metadata: Metadata = {
   title: {
-    default: "Inkwell — A Blog for Thoughtful Writing",
-    template: "%s | Inkwell",
+    default: "Datics AI — A Blog for Thoughtful Writing",
+    template: "%s | Datics AI",
   },
   description:
-    "Inkwell is a content-first editorial blog platform for long-form writing, ideas, and stories worth reading.",
+    "Datics AI is a content-first editorial blog platform for long-form writing, ideas, and stories worth reading.",
   keywords: ["blog", "writing", "essays", "technology", "design", "culture"],
-  authors: [{ name: "Inkwell Editorial" }],
+  authors: [{ name: "Datics AI Editorial" }],
   openGraph: {
     type: "website",
     locale: "en_US",
-    siteName: "Inkwell",
+    siteName: "Datics AI",
   },
   twitter: {
     card: "summary_large_image",

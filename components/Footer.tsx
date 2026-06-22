@@ -17,7 +17,7 @@ const footerLinks = {
   ],
   Platform: [
     { label: "Write a Post", href: "#write" },
-    { label: "About Inkwell", href: "#about" },
+    { label: "About Datics AI", href: "#about" },
     { label: "RSS Feed", href: "#" },
   ],
 };
@@ -25,7 +25,7 @@ const footerLinks = {
 const socialLinks = [
   { label: "Twitter", href: "#", icon: Twitter },
   { label: "GitHub", href: "#", icon: Github },
-  { label: "Email", href: "mailto:hello@inkwell.blog", icon: Mail },
+  { label: "Email", href: "mailto:hello@datics.ai", icon: Mail },
 ];
 
 export default function Footer() {
@@ -102,7 +102,7 @@ export default function Footer() {
                     <Link
                       href={resolveHref(link.href)}
                       onClick={(e) => handleClick(e, link.href)}
-                      className="text-sm text-stone-600 dark:text-stone-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 rounded"
+                      className="text-sm text-stone-500 dark:text-stone-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 rounded"
                     >
                       {link.label}
                     </Link>
@@ -122,10 +122,10 @@ export default function Footer() {
           className="mt-12 pt-8 border-t border-stone-200 dark:border-stone-800 flex flex-col sm:flex-row items-center justify-between gap-4"
         >
           <p className="text-xs text-stone-400 dark:text-stone-500">
-            &copy; {new Date().getFullYear()} {APP_NAME}. Crafted for readers.
+            © {new Date().getFullYear()} {APP_NAME}. All rights reserved.
           </p>
           <p className="text-xs text-stone-400 dark:text-stone-500">
-            Built with Next.js and a love for good writing.
+            Built for writers who care about craft.
           </p>
         </motion.div>
       </div>
