@@ -1,4 +1,4 @@
-export const APP_NAME = "Inkwell";
+export const APP_NAME = "Datics AI";
 export const APP_TAGLINE = "Writing worth reading.";
 export const APP_DESCRIPTION =
   "A content-first editorial platform for long-form essays, ideas, and stories.";
@@ -42,4 +42,4 @@ export interface Tag {
   count: number;
 }
 
-export const ACCENT_COLOR = "amber";
+export const ACCENT_COLOR = "blue";
